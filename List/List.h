@@ -43,9 +43,9 @@ public:
 	void add_node(_Node<T>* ptr, T data);
 
 	T del_el_fr_head();
-	void del_el_fr_tail();
+	T del_el_fr_tail();
 	void del_node(_Node<T>* ptr);
-
+	T get_tail() { return tail->data; }
 	_Node<T>* find_ptr(T elem);
 
 
@@ -74,9 +74,10 @@ template <class T> void _List<T>::Print_list()
 
 }
 
+
 template <class T> bool _List<T>::is_list_empty()
 {
-	if (size == 0)
+	if (head == NULL)
 	{
 		return true;
 	}
@@ -84,16 +85,16 @@ template <class T> bool _List<T>::is_list_empty()
 		return false;
 }
 
-template <class T> void _List<T>::add_el_in_head(T data)
+template <class T> void _List<T>::add_el_in_head(T data_)
 {
-	_Node<T>* new_node = new _Node<T>(data, head);
-	if (head == NULL)
-	{
-		tail = new_node;
-	}
-	head = new_node;
-	size++;
 
+		_Node<T>* new_node = new _Node<T>(data_, head);
+		if (head == NULL)
+		{
+			tail = new_node;
+		}
+		head = new_node;
+		size++;
 }
 
 template <class T> int _List<T>::size_of_list()
@@ -157,7 +158,7 @@ template <class T> T _List<T>::del_el_fr_head()
 		throw string("Error");
 }
 
-template <class T> void _List<T>::del_el_fr_tail()
+template <class T> T _List<T>::del_el_fr_tail()
 {
 	if (size == 0)
 	{
@@ -176,6 +177,7 @@ template <class T> void _List<T>::del_el_fr_tail()
 			{
 				temp = temp->next;
 			}
+			delete temp->next;
 			temp->next = NULL;
 			size--;
 		}
@@ -238,11 +240,16 @@ class _Stack
 	_List<T> memory;
 public:
 	_Stack();
+
+	T viewData(_Node<T>* ptr);
 	bool is_stack_empty();
 	void push(const T elem);
 	int size_of_stack();
 	T pop();
 	T view_top();
+	T view_bot();
+	T get_tail();
+	void del_el_fr_tail();
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -259,16 +266,41 @@ template <class T> T _Stack<T>::pop()
 	return memory.del_el_fr_head();
 };
 
+template <class T> T _Stack<T>::get_tail()
+{
+	return memory.get_tail();
+};
+
+
 template <class T> bool _Stack<T>::is_stack_empty()
 {
 	return memory.is_list_empty();
 };
+
+
+template <class T> void _Stack<T>::del_el_fr_tail()
+{
+	return memory.del_el_fr_tail();
+};
+
+
 
 template <class T> int _Stack<T>::size_of_stack()
 {
 	return memory.size_of_list();
 };
 
+template <class T> T _Stack<T>::viewData(_Node<T>* ptr)
+{
+	return memory.viewData();
+};
+
+template <class T> T _Stack<T>::view_bot()
+{
+	T bot = memory.del_el_fr_tail();
+	memory.add_el_in_tail(bot);
+	return bot;
+};
 
 template <class T> T _Stack<T>::view_top()
 {
